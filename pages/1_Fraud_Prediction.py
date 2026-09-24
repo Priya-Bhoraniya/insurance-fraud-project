@@ -24,8 +24,7 @@ ui.inject_custom_css()
 ui.top_navbar("Prediction")
 
 # Display the stunning vehicle fraud banner
-st.image("/Users/priyabhoraniya/.gemini/antigravity-ide/brain/53372486-ca7f-435b-9a27-0f443dc16077/ins_fraud_banner_1788292068124.jpg", use_container_width=True)
-
+st.image("assets/ins_fraud_banner_1788292068124.jpg", use_container_width=True)
 
 # ==========================================
 # Load Dataset
