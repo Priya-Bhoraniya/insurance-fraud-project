@@ -21,8 +21,7 @@ ui.inject_custom_css()
 ui.top_navbar("Performance")
 
 # Display the stunning vehicle performance banner
-st.image("/Users/priyabhoraniya/.gemini/antigravity-ide/brain/53372486-ca7f-435b-9a27-0f443dc16077/ins_analytics_banner_1788292078459.jpg", use_container_width=True)
-
+st.image("assets/ins_analytics_banner_1788292078459.jpg", use_container_width=True)
 st.title("📊 Model Performance")
 
 st.write(
