@@ -1,5 +1,5 @@
-import streamlit as st
-import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -139,7 +139,7 @@ st.markdown("This bar chart visualizes the importance (weight) the AI assigns to
 
 import plotly.express as px
 import plotly.graph_objects as go
-import plotly.figure_factory as ff
+
 
 coef_df = pd.DataFrame({
     'Feature': features,
@@ -173,23 +173,31 @@ st.markdown("Visualizing True Positives, True Negatives, False Positives, and Fa
 
 x = ['Predicted No Fraud', 'Predicted Fraud']
 y = ['Actual No Fraud', 'Actual Fraud']
-z = cm[::-1] # Reverse rows for proper heatmap orientation
 
-fig_cm = ff.create_annotated_heatmap(
-    z, x=x, y=y[::-1], 
-    colorscale=['#00f2fe', '#130022', '#f5576c'], 
-    showscale=True
+fig_cm = go.Figure(
+    data=go.Heatmap(
+        z=cm,
+        x=x,
+        y=y,
+        text=cm,
+        texttemplate="%{text}",
+        colorscale=[
+            [0, '#00f2fe'],
+            [0.5, '#130022'],
+            [1, '#f5576c']
+        ],
+        showscale=True
+    )
 )
+
 fig_cm.update_layout(
     template='plotly_dark',
     margin=dict(t=40, l=10, r=10, b=10),
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)'
 )
+
 st.plotly_chart(fig_cm, use_container_width=True)
-
-
-st.divider()
 
 
 # ==========================================
