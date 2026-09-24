@@ -6,3 +6,4 @@ fastapi
 uvicorn
 pydantic
 sqlalchemy
+streamlit-option-menu
