@@ -18,8 +18,7 @@ ui.inject_custom_css()
 ui.top_navbar("Designer")
 
 # Display the stunning vehicle designer banner
-st.image("/Users/priyabhoraniya/.gemini/antigravity-ide/brain/53372486-ca7f-435b-9a27-0f443dc16077/ins_designer_banner_1788292090868.jpg", use_container_width=True)
-
+st.image("assets/ins_designer_banner_1788292090868.jpg", use_container_width=True)
 # Header
 st.title("🧠 Model Designer Studio")
 st.markdown("Configure and train custom models on the insurance dataset using this visual designer.")
