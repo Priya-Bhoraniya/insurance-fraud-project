@@ -13,7 +13,7 @@ ui.inject_custom_css()
 ui.top_navbar("Home")
 
 # Display the stunning vehicle hero banner
-st.image("/Users/priyabhoraniya/.gemini/antigravity-ide/brain/53372486-ca7f-435b-9a27-0f443dc16077/ins_hero_banner_1788292056689.jpg", use_container_width=True)
+st.image("assets/ins_hero_banner_1788292056689.jpg", use_container_width=True)
 
 st.title("🚗 Insurance Fraud Detection System")
 
