@@ -13,112 +13,286 @@ st.set_page_config(
 ui.inject_custom_css()
 ui.top_navbar("Analytics")
 
-# Display the stunning vehicle analytics banner
-st.image("assets/ins_analytics_banner_1788292078459.jpg", use_container_width=True)
+# Display the vehicle analytics banner
+st.image(
+    "assets/ins_analytics_banner_1788292078459.jpg",
+    use_container_width=True
+)
+
 st.title("📈 Advanced Vehicle Telemetry & Analytics")
-st.markdown("Explore deep insights, telemetry, and fraud distribution across the insurance dataset using modern interactive visualizations.")
+
+st.markdown(
+    "Explore deep insights, telemetry, and fraud distribution across "
+    "the insurance dataset using modern interactive visualizations."
+)
+
+
+# ==========================================
+# Load Dataset
+# ==========================================
 
 @st.cache_data
 def load_data():
     return pd.read_csv("insurance_fraud_data.csv")
 
+
 try:
     df = load_data()
-    
-    # Custom color sequence for the neon theme
-    neon_colors = ['#00f2fe', '#f093fb', '#f5576c', '#4facfe', '#00ff87']
-    
+
+    # ==========================================
+    # Clean Missing Values
+    # ==========================================
+
+    required_columns = [
+        "fraud reported",
+        "accident_site",
+        "vehicle_category",
+        "total_claim",
+        "age_of_driver",
+        "vehicle_price",
+        "marital_status",
+        "high_education",
+        "police_report"
+    ]
+
+    # Keep only required columns that exist in dataset
+    existing_columns = [
+        col for col in required_columns
+        if col in df.columns
+    ]
+
+    df = df.dropna(subset=existing_columns)
+
+    # Convert numeric columns safely
+    numeric_columns = [
+        "total_claim",
+        "age_of_driver",
+        "vehicle_price"
+    ]
+
+    for col in numeric_columns:
+        if col in df.columns:
+            df[col] = pd.to_numeric(
+                df[col],
+                errors="coerce"
+            )
+
+    # Remove rows where numeric conversion created NaN
+    df = df.dropna(subset=numeric_columns)
+
+    # ==========================================
+    # Custom Color Sequence
+    # ==========================================
+
+    neon_colors = [
+        "#00f2fe",
+        "#f093fb",
+        "#f5576c",
+        "#4facfe",
+        "#00ff87"
+    ]
+
     st.divider()
-    
+
+    # ==========================================
+    # Row 1
+    # ==========================================
+
     col1, col2 = st.columns(2)
-    
+
+    # ==========================================
+    # Fraud Hierarchy Analysis
+    # ==========================================
+
     with col1:
+
         st.subheader("🌐 Fraud Hierarchy Analysis")
-        st.markdown("A deep dive into how fraud distribution correlates with the accident site and vehicle category.")
-        # Creative Sunburst Chart
+
+        st.markdown(
+            "A deep dive into how fraud distribution correlates "
+            "with the accident site and vehicle category."
+        )
+
         fig_sunburst = px.sunburst(
-            df, 
-            path=['fraud reported', 'accident_site', 'vehicle_category'], 
-            values='total_claim',
-            color='fraud reported',
-            color_discrete_map={'Y': '#f5576c', 'N': '#00f2fe'},
-            template='plotly_dark'
+            df,
+            path=[
+                "fraud reported",
+                "accident_site",
+                "vehicle_category"
+            ],
+            values="total_claim",
+            color="fraud reported",
+            color_discrete_map={
+                "Y": "#f5576c",
+                "N": "#00f2fe"
+            },
+            template="plotly_dark"
         )
+
         fig_sunburst.update_layout(
-            margin=dict(t=10, l=10, r=10, b=10),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
+            margin=dict(
+                t=10,
+                l=10,
+                r=10,
+                b=10
+            ),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
         )
-        st.plotly_chart(fig_sunburst, use_container_width=True)
+
+        st.plotly_chart(
+            fig_sunburst,
+            use_container_width=True
+        )
+
+    # ==========================================
+    # 3D Telemetry Correlation
+    # ==========================================
 
     with col2:
+
         st.subheader("🧊 3D Telemetry Correlation")
-        st.markdown("Interactive 3D mapping of Driver Age, Vehicle Price, and Total Claim Amount.")
-        # Creative 3D Scatter
+
+        st.markdown(
+            "Interactive 3D mapping of Driver Age, Vehicle Price, "
+            "and Total Claim Amount."
+        )
+
         fig_3d = px.scatter_3d(
-            df, 
-            x='age_of_driver', 
-            y='vehicle_price', 
-            z='total_claim',
-            color='fraud reported',
+            df,
+            x="age_of_driver",
+            y="vehicle_price",
+            z="total_claim",
+            color="fraud reported",
             size_max=18,
             opacity=0.8,
-            color_discrete_map={'Y': '#f5576c', 'N': '#00f2fe'},
-            template='plotly_dark'
+            color_discrete_map={
+                "Y": "#f5576c",
+                "N": "#00f2fe"
+            },
+            template="plotly_dark"
         )
+
         fig_3d.update_layout(
-            margin=dict(t=10, l=10, r=10, b=10),
-            paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(
+                t=10,
+                l=10,
+                r=10,
+                b=10
+            ),
+            paper_bgcolor="rgba(0,0,0,0)",
             scene=dict(
-                xaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(255,255,255,0.1)"),
-                yaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(255,255,255,0.1)"),
-                zaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(255,255,255,0.1)")
+                xaxis=dict(
+                    backgroundcolor="rgba(0,0,0,0)",
+                    gridcolor="rgba(255,255,255,0.1)"
+                ),
+                yaxis=dict(
+                    backgroundcolor="rgba(0,0,0,0)",
+                    gridcolor="rgba(255,255,255,0.1)"
+                ),
+                zaxis=dict(
+                    backgroundcolor="rgba(0,0,0,0)",
+                    gridcolor="rgba(255,255,255,0.1)"
+                )
             )
         )
-        st.plotly_chart(fig_3d, use_container_width=True)
-        
+
+        st.plotly_chart(
+            fig_3d,
+            use_container_width=True
+        )
+
     st.divider()
-    
+
+    # ==========================================
+    # Row 2
+    # ==========================================
+
     col3, col4 = st.columns(2)
-    
+
+    # ==========================================
+    # Claim Distribution Density
+    # ==========================================
+
     with col3:
+
         st.subheader("🎼 Claim Distribution Density")
-        st.markdown("Violin plot showing the density and distribution of claims by Marital Status.")
+
+        st.markdown(
+            "Violin plot showing the density and distribution "
+            "of claims by Marital Status."
+        )
+
         fig_violin = px.violin(
-            df, 
-            y="total_claim", 
-            x="marital_status", 
-            color="fraud reported", 
-            box=True, 
+            df,
+            y="total_claim",
+            x="marital_status",
+            color="fraud reported",
+            box=True,
             points="all",
-            color_discrete_map={'Y': '#f5576c', 'N': '#00f2fe'},
-            template='plotly_dark'
+            color_discrete_map={
+                "Y": "#f5576c",
+                "N": "#00f2fe"
+            },
+            template="plotly_dark"
         )
+
         fig_violin.update_layout(
-            margin=dict(t=10, l=10, r=10, b=10),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
+            margin=dict(
+                t=10,
+                l=10,
+                r=10,
+                b=10
+            ),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
         )
-        st.plotly_chart(fig_violin, use_container_width=True)
-        
+
+        st.plotly_chart(
+            fig_violin,
+            use_container_width=True
+        )
+
+    # ==========================================
+    # Claim Frequency Heatmap
+    # ==========================================
+
     with col4:
+
         st.subheader("🔥 Claim Frequency Heatmap")
-        st.markdown("Density heatmap of Police Reports vs Education Level.")
+
+        st.markdown(
+            "Density heatmap of Police Reports vs Education Level."
+        )
+
         fig_heatmap = px.density_heatmap(
-            df, 
-            x="high_education", 
-            y="police_report", 
+            df,
+            x="high_education",
+            y="police_report",
             z="total_claim",
             histfunc="avg",
             color_continuous_scale="Purp",
-            template='plotly_dark'
+            template="plotly_dark"
         )
+
         fig_heatmap.update_layout(
-            margin=dict(t=10, l=10, r=10, b=10),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
+            margin=dict(
+                t=10,
+                l=10,
+                r=10,
+                b=10
+            ),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)"
         )
-        st.plotly_chart(fig_heatmap, use_container_width=True)
+
+        st.plotly_chart(
+            fig_heatmap,
+            use_container_width=True
+        )
 
 except Exception as e:
-    st.error(f"Error loading data for analytics: {e}")
+
+    st.error(
+        f"Error loading data for analytics: {e}"
+    )
